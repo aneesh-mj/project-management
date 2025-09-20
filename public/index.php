@@ -1,6 +1,7 @@
 <?php
 use Slim\Factory\AppFactory;
 use App\Controllers\UserController;
+use App\Controllers\CompanyController;
 use App\Middleware\CorsMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -35,6 +36,11 @@ $app->get('/', function (Request $request, Response $response) {
         'message' => 'Welcome to Slim Framework REST API',
         'version' => '1.0.0',
         'endpoints' => [
+            'GET /api/companies' => 'Get all companies',
+            'GET /api/companies/{id}' => 'Get company by ID',
+            'POST /api/companies' => 'Create new company',
+            'PUT /api/companies/{id}' => 'Update company',
+            'DELETE /api/companies/{id}' => 'Delete company',
             'GET /api/users' => 'Get all users',
             'GET /api/users/{id}' => 'Get user by ID',
             'POST /api/users' => 'Create new user',
@@ -51,6 +57,11 @@ $app->get('/project-management/public/', function (Request $request, Response $r
         'message' => 'Welcome to Slim Framework REST API',
         'version' => '1.0.0',
         'endpoints' => [
+            'GET /api/companies' => 'Get all companies',
+            'GET /api/companies/{id}' => 'Get company by ID',
+            'POST /api/companies' => 'Create new company',
+            'PUT /api/companies/{id}' => 'Update company',
+            'DELETE /api/companies/{id}' => 'Delete company',
             'GET /api/users' => 'Get all users',
             'GET /api/users/{id}' => 'Get user by ID',
             'POST /api/users' => 'Create new user',
@@ -63,6 +74,13 @@ $app->get('/project-management/public/', function (Request $request, Response $r
 
 // API routes with full path (when accessing via direct URL)
 $app->group('/project-management/public/api', function ($group) {
+    // Company routes
+    $group->get('/companies', [CompanyController::class, 'getAllCompanies']);
+    $group->get('/companies/{id:[0-9]+}', [CompanyController::class, 'getCompanyById']);
+    $group->post('/companies', [CompanyController::class, 'createCompany']);
+    $group->put('/companies/{id:[0-9]+}', [CompanyController::class, 'updateCompany']);
+    $group->delete('/companies/{id:[0-9]+}', [CompanyController::class, 'deleteCompany']);
+    
     // User routes
     $group->get('/users', [UserController::class, 'getAllUsers']);
     $group->get('/users/{id:[0-9]+}', [UserController::class, 'getUserById']);
@@ -85,6 +103,13 @@ $app->options('/api/{routes:.+}', function (Request $request, Response $response
 
 // Routes
 $app->group('/api', function ($group) {
+    // Company routes
+    $group->get('/companies', [CompanyController::class, 'getAllCompanies']);
+    $group->get('/companies/{id:[0-9]+}', [CompanyController::class, 'getCompanyById']);
+    $group->post('/companies', [CompanyController::class, 'createCompany']);
+    $group->put('/companies/{id:[0-9]+}', [CompanyController::class, 'updateCompany']);
+    $group->delete('/companies/{id:[0-9]+}', [CompanyController::class, 'deleteCompany']);
+    
     // User routes
     $group->get('/users', [UserController::class, 'getAllUsers']);
     $group->get('/users/{id:[0-9]+}', [UserController::class, 'getUserById']);
