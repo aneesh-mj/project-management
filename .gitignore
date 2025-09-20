@@ -1,0 +1,13 @@
+# Ignore system files
+.DS_Store
+
+# Ignore MAMP-specific logs or configs if not needed
+/logs/
+/tmp/
+
+# Ignore IDE/editor settings
+.vscode/
+.idea/
+
+# Ignore dependencies (if using Composer)
+vendor/

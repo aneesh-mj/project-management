@@ -1,0 +1,22 @@
+{
+    "name": "projectmanagement/projectmanagement",
+    "autoload": {
+        "psr-4": {
+            "Projectmanagement\\Projectmanagement\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Aneesh MJ",
+            "email": "aneeshmj@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.7",
+        "nyholm/psr7": "^1.8",
+        "nyholm/psr7-server": "^1.1",
+        "php-di/php-di": "^7.1",
+        "monolog/monolog": "^3.9"
+    }
+}
