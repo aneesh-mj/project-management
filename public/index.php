@@ -2,6 +2,7 @@
 use Slim\Factory\AppFactory;
 use App\Controllers\UserController;
 use App\Controllers\CompanyController;
+use App\Controllers\AuthController;
 use App\Middleware\CorsMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -36,6 +37,7 @@ $app->get('/', function (Request $request, Response $response) {
         'message' => 'Welcome to Slim Framework REST API',
         'version' => '1.0.0',
         'endpoints' => [
+            'POST /api/register' => 'Register new user',
             'GET /api/companies' => 'Get all companies',
             'GET /api/companies/{id}' => 'Get company by ID',
             'POST /api/companies' => 'Create new company',
@@ -57,6 +59,7 @@ $app->get('/project-management/public/', function (Request $request, Response $r
         'message' => 'Welcome to Slim Framework REST API',
         'version' => '1.0.0',
         'endpoints' => [
+            'POST /api/register' => 'Register new user',
             'GET /api/companies' => 'Get all companies',
             'GET /api/companies/{id}' => 'Get company by ID',
             'POST /api/companies' => 'Create new company',
@@ -74,6 +77,8 @@ $app->get('/project-management/public/', function (Request $request, Response $r
 
 // API routes with full path (when accessing via direct URL)
 $app->group('/project-management/public/api', function ($group) {
+    // Auth routes
+    $group->post('/register', [AuthController::class, 'register']);
     // Company routes
     $group->get('/companies', [CompanyController::class, 'getAllCompanies']);
     $group->get('/companies/{id:[0-9]+}', [CompanyController::class, 'getCompanyById']);
@@ -103,6 +108,8 @@ $app->options('/api/{routes:.+}', function (Request $request, Response $response
 
 // Routes
 $app->group('/api', function ($group) {
+    // Auth routes
+    $group->post('/register', [AuthController::class, 'register']);
     // Company routes
     $group->get('/companies', [CompanyController::class, 'getAllCompanies']);
     $group->get('/companies/{id:[0-9]+}', [CompanyController::class, 'getCompanyById']);
