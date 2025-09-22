@@ -55,6 +55,21 @@ class AuthUser
             throw new PDOException('Error registering user: ' . $e->getMessage());
         }
     }
+
+    public function getUserByEmail(string $email): ?array
+    {
+        try {
+            $query = "SELECT user_id, company_id, email, password_hash, first_name, last_name, created_at
+                      FROM {$this->table} WHERE email = :email LIMIT 1";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user ?: null;
+        } catch (PDOException $e) {
+            throw new PDOException('Error fetching user: ' . $e->getMessage());
+        }
+    }
 }
 
 

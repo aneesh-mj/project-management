@@ -73,6 +73,56 @@ class AuthController
             return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     }
+
+    public function login(Request $request, Response $response)
+    {
+        try {
+            $data = json_decode($request->getBody()->getContents(), true) ?? [];
+
+            $email = isset($data['email']) ? trim($data['email']) : '';
+            $password = isset($data['password']) ? (string)$data['password'] : '';
+
+            if ($email === '' || $password === '') {
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'email and password are required'
+                ]));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'Invalid email format'
+                ]));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+            }
+
+            $user = $this->authUser->getUserByEmail($email);
+            if (!$user || !password_verify($password, $user['password_hash'])) {
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'Invalid credentials'
+                ]));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
+            }
+
+            unset($user['password_hash']);
+
+            $response->getBody()->write(json_encode([
+                'status' => 'success',
+                'message' => 'Login successful',
+                'data' => $user
+            ]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+        }
+    }
 }
 
 

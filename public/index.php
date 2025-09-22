@@ -38,6 +38,7 @@ $app->get('/', function (Request $request, Response $response) {
         'version' => '1.0.0',
         'endpoints' => [
             'POST /api/register' => 'Register new user',
+            'POST /api/login' => 'Login user',
             'GET /api/companies' => 'Get all companies',
             'GET /api/companies/{id}' => 'Get company by ID',
             'POST /api/companies' => 'Create new company',
@@ -60,6 +61,7 @@ $app->get('/project-management/public/', function (Request $request, Response $r
         'version' => '1.0.0',
         'endpoints' => [
             'POST /api/register' => 'Register new user',
+            'POST /api/login' => 'Login user',
             'GET /api/companies' => 'Get all companies',
             'GET /api/companies/{id}' => 'Get company by ID',
             'POST /api/companies' => 'Create new company',
@@ -79,6 +81,7 @@ $app->get('/project-management/public/', function (Request $request, Response $r
 $app->group('/project-management/public/api', function ($group) {
     // Auth routes
     $group->post('/register', [AuthController::class, 'register']);
+    $group->post('/login', [AuthController::class, 'login']);
     // Company routes
     $group->get('/companies', [CompanyController::class, 'getAllCompanies']);
     $group->get('/companies/{id:[0-9]+}', [CompanyController::class, 'getCompanyById']);
@@ -110,6 +113,7 @@ $app->options('/api/{routes:.+}', function (Request $request, Response $response
 $app->group('/api', function ($group) {
     // Auth routes
     $group->post('/register', [AuthController::class, 'register']);
+    $group->post('/login', [AuthController::class, 'login']);
     // Company routes
     $group->get('/companies', [CompanyController::class, 'getAllCompanies']);
     $group->get('/companies/{id:[0-9]+}', [CompanyController::class, 'getCompanyById']);
