@@ -12,11 +12,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect if not logged in
-    if (!currentUser) {
-      navigate('/login');
-      return;
-    }
 
     const fetchData = async () => {
       try {

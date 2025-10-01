@@ -16,6 +16,17 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false);
   }, []);
+  
+  // Add a listener for storage events to handle login/logout in other tabs
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const user = authService.getCurrentUser();
+      setCurrentUser(user);
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const login = async (email, password) => {
     try {
