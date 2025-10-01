@@ -11,3 +11,5 @@
 
 # Ignore dependencies (if using Composer)
 vendor/
+
+frontend/node_modules/
