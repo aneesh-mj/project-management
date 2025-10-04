@@ -12,7 +12,7 @@ function App() {
     <AuthProvider>
       <Router>
         <Navigation />
-        <div className="container">
+        <div>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route 

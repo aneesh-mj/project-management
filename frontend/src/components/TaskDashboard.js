@@ -1,12 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState, useEffect, useMemo } from 'react';
 import TaskColumn from './TaskColumn';
 
+const TASK_STATUSES = {
+  todo: 'To Do',
+  in_progress: 'In Progress',
+  blocked: 'Blocked',
+  done: 'Done',
+};
+
 const TaskDashboard = () => {
-  const { currentUser } = useContext(AuthContext);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // TODO: Replace with a real API call.
+  // This is a good place to use a custom hook like `useTasks` to encapsulate data fetching logic.
 
   // Mock data for now - will be replaced with API call
   useEffect(() => {
@@ -36,45 +44,36 @@ const TaskDashboard = () => {
     console.log(`Task ${taskId} status changed to ${newStatus}`);
   };
 
+  const tasksByStatus = useMemo(() => {
+    const groupedTasks = {};
+    for (const status in TASK_STATUSES) {
+      groupedTasks[status] = tasks.filter(task => task.status === status);
+    }
+    return groupedTasks;
+  }, [tasks]);
+
   if (loading) {
-    return <div className="text-center p-5"><div className="spinner-border" role="status"></div></div>;
+    return <div className="text-center p-5"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" role="status"></div></div>;
   }
 
   if (error) {
-    return <div className="alert alert-danger">{error}</div>;
+    return <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{error}</div>;
   }
 
-  // Filter tasks by status
-  const todoTasks = tasks.filter(task => task.status === 'todo');
-  const inProgressTasks = tasks.filter(task => task.status === 'in_progress');
-  const blockedTasks = tasks.filter(task => task.status === 'blocked');
-  const doneTasks = tasks.filter(task => task.status === 'done');
-
   return (
-    <div className="container-fluid mt-4">
+    <div className="container-fluid mx-auto mt-4">
       <h2 className="mb-4">Task Dashboard</h2>
       
-      <div className="row d-flex flex-row flex-nowrap overflow-auto">
-        <TaskColumn 
-          title="To Do" 
-          tasks={todoTasks} 
-          onStatusChange={handleStatusChange} 
-        />
-        <TaskColumn 
-          title="In Progress" 
-          tasks={inProgressTasks} 
-          onStatusChange={handleStatusChange} 
-        />
-        <TaskColumn 
-          title="Blocked" 
-          tasks={blockedTasks} 
-          onStatusChange={handleStatusChange} 
-        />
-        <TaskColumn 
-          title="Done" 
-          tasks={doneTasks} 
-          onStatusChange={handleStatusChange} 
-        />
+      <div className="flex flex-nowrap overflow-x-auto" style={{ gap: '1rem', padding: '1rem 0' }}>
+        {Object.entries(TASK_STATUSES).map(([statusKey, statusLabel]) => (
+          <TaskColumn
+            key={statusKey}
+            title={statusLabel}
+            tasks={tasksByStatus[statusKey] || []}
+            onStatusChange={handleStatusChange}
+            style={{ minWidth: '300px' }}
+          />
+        ))}
       </div>
     </div>
   );
